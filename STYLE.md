@@ -176,8 +176,8 @@ standards, and drops the packaging ones.
   `[dependency-groups]`, `[tool.uv] package = false`, and the same ruff and
   pytest config as a library (with `testpaths = ["tests"]`).
 - **K3** Not required: build backend, `license-files`, classifiers, project
-  URLs, `CHANGELOG.rst`, a `minchin/` package. Still required: F1-F9, D1-D5,
-  `README`, `LICENSE.txt`, `tasks.py`, `.editorconfig`, `.gitignore`,
+  URLs, a `minchin/` package. Still required: F1-F9, D1-D5, `README`,
+  `CHANGELOG.rst` (L5), `LICENSE.txt`, `tasks.py`, `.editorconfig`, `.gitignore`,
   `.gitattributes`, `.github/workflows/check.yml`. (`invoke.yaml` only
   configures `minchin.releaser`, so tooling repos don't need it.)
 - **K4** Tests live in a top-level `tests/` (nothing ships), run by

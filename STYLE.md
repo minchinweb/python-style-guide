@@ -118,7 +118,7 @@ Start from `templates/pyproject.toml`. Order: `build-system`, `project`,
   only, so `minchin.<name>.tests` is kept. `pytest` config is in
   `pyproject.toml` with `testpaths = ["minchin"]`.
 - **L4** Repo root contains: `pyproject.toml`, `uv.lock`, `README.rst` (or
-  `README.md` for apps), `CHANGELOG.rst`, `LICENSE.txt`, `tasks.py`, `invoke.yaml`,
+  `README.md` for apps), a changelog (L5), `LICENSE.txt`, `tasks.py`, `invoke.yaml`,
   `.editorconfig`, `.gitignore`, `.gitattributes`,
   `.github/workflows/check.yml` and `test.yml`. Docs in `docs/`.
   The audit checks the **exact casing** of these names (e.g. `CHANGELOG.rst`,
@@ -128,8 +128,14 @@ Start from `templates/pyproject.toml`. Order: `build-system`, `project`,
   fix a wrong case with a two-step `git mv` (to a temporary name, then the
   right one). Build output (`build/`, `dist/`) and `.venv/` are
   git-ignored. No `env/` folder: `.venv/` only.
-- **L5** Changelog is `CHANGELOG.rst` in the `releases` (Sphinx) format, which
-  `minchin.releaser` edits.
+- **L5** The changelog is in the `releases` (Sphinx) format, which
+  `minchin.releaser` edits, and there is exactly **one** copy. It lives at
+  either `CHANGELOG.rst` (repo root, the default) or `docs/changelog.rst`
+  (when the project has Sphinx docs: lower case, because the file name becomes
+  the page URL). Never both, and no links or copies: Git doesn't track hard
+  links, and symlinks are unreliable on Windows checkouts. If the file is in
+  `docs/`, the README and `[project.urls] Changelog` link to the docs page, and
+  `invoke.yaml` (`releaser: changelog:`) names the real path.
 - **L6** Releases are tagged `vMAJOR.MINOR.PATCH` (annotated), e.g. `v1.0.0`,
   on the `[release] x.y.z` commit. The `v` is always present; the changelog's
   `:release:` lines and `pyproject`/`__version__` stay bare (`1.0.0`).
@@ -180,7 +186,7 @@ standards, and drops the packaging ones.
   pytest config as a library (with `testpaths = ["tests"]`).
 - **K3** Not required: build backend, `license-files`, classifiers, project
   URLs, a `minchin/` package. Still required: F1-F9, D1-D5, `README`,
-  `CHANGELOG.rst` (L5), `LICENSE.txt`, `tasks.py`, `.editorconfig`, `.gitignore`,
+  a changelog (L5), `LICENSE.txt`, `tasks.py`, `.editorconfig`, `.gitignore`,
   `.gitattributes`, `.github/workflows/check.yml`. (`invoke.yaml` only
   configures `minchin.releaser`, so tooling repos don't need it.)
 - **K4** Tests live in a top-level `tests/` (nothing ships), run by

@@ -130,6 +130,9 @@ Start from `templates/pyproject.toml`. Order: `build-system`, `project`,
   git-ignored. No `env/` folder: `.venv/` only.
 - **L5** Changelog is `CHANGELOG.rst` in the `releases` (Sphinx) format, which
   `minchin.releaser` edits.
+- **L6** Releases are tagged `vMAJOR.MINOR.PATCH` (annotated), e.g. `v1.0.0`,
+  on the `[release] x.y.z` commit. The `v` is always present; the changelog's
+  `:release:` lines and `pyproject`/`__version__` stay bare (`1.0.0`).
 
 ## 6. Code
 

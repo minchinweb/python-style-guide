@@ -64,8 +64,6 @@ dev = [
   "minchin.tasks >= 1.1",
   "pytest >= 8",
   "ruff >= 0.14",
-  "taplo >= 0.9",                # formats pyproject.toml
-  "validate-pyproject >= 0.24",  # checks pyproject.toml against the schemas
   { include-group = "release" },
 ]
 release = ["minchin.releaser >= 0.9.6"]

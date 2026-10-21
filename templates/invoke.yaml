@@ -1,0 +1,11 @@
+releaser:
+    module_name: minchin.example
+    pypi_name: minchin.example
+    here: .
+    docs: none
+    test: none
+    source: minchin
+    changelog: CHANGELOG.rst
+    version: minchin/example/__init__.py
+    test_command: none
+    version_bump: none

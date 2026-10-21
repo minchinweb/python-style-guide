@@ -1,0 +1,151 @@
+[build-system]
+# v77 needed for SPDX `license` expressions (PEP 639)
+requires = ["setuptools >= 77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "minchin.example"
+description = "One sentence, no trailing period needed."
+dynamic = ["version", "readme"]
+authors = [{ name = "William Minchin", email = "w_minchin@hotmail.com" }]
+maintainers = [{ name = "William Minchin", email = "w_minchin@hotmail.com" }]
+# Set deliberately: as old as practical, but test on the newest Python.
+requires-python = ">=3.9"
+keywords = []
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+classifiers = [
+  # having an unknown classifier should keep PyPI from accepting the
+  # package as an upload
+  # 'Private :: Do Not Upload',
+  # 'Development Status :: 1 - Planning',
+  # 'Development Status :: 2 - Pre-Alpha',
+  # 'Development Status :: 3 - Alpha',
+  # 'Development Status :: 4 - Beta',
+  'Development Status :: 5 - Production/Stable',
+  # 'Development Status :: 6 - Mature',
+  # 'Development Status :: 7 - Inactive',
+  "Programming Language :: Python :: 3",
+  # "Programming Language :: Python :: 3.9",
+  # "Programming Language :: Python :: 3.10",
+  # "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: 3.15",
+  "Programming Language :: Python :: 3 :: Only",
+  "Natural Language :: English",
+  "Operating System :: OS Independent",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  # full list at https://pypi.org/classifiers/
+]
+# Direct (top-level) requirements only, with a minimum version (and a comment
+# for *why* when it is a security or compatibility minimum). Exact versions of
+# everything, direct and indirect, live in `uv.lock`.
+dependencies = [
+  # "colorama >= 0.4.6",
+]
+
+[project.optional-dependencies]
+# Extras are for *users* of the package (`pip install pkg[extra]`).
+# Tooling for working on the package goes in [dependency-groups].
+
+[project.urls]
+"Bug Tracker" = "https://github.com/MinchinWeb/minchin.example/issues"
+Repository = "https://github.com/MinchinWeb/minchin.example"
+Changelog = "https://github.com/MinchinWeb/minchin.example/blob/master/CHANGELOG.rst"
+# Documentation =
+# "Release Notes" =
+
+[dependency-groups]
+# PEP 735; not published. `uv sync` installs `dev` by default.
+dev = [
+  "invoke >= 2.2",
+  "pytest >= 8",
+  "ruff >= 0.14",
+  "taplo >= 0.9",                # formats pyproject.toml
+  "validate-pyproject >= 0.24",  # checks pyproject.toml against the schemas
+  { include-group = "release" },
+]
+release = ["minchin.releaser >= 0.9.6"]
+docs = [
+  # "sphinx",
+  # "releases",
+]
+
+[tool.setuptools.packages.find]
+# flat layout; tests live in the package (`minchin/<name>/tests/`).
+# `minchin` is an implicit (PEP 420) namespace package, so it has NO
+# `__init__.py`
+include = ["minchin*"]
+exclude = [
+  # top-level only; `minchin.<name>.tests` ships with the package
+  "build",
+  "dist",
+  "docs",
+  "env",
+  "test",
+  "tests",
+]
+
+[tool.setuptools.dynamic]
+# this has to be the place the version is located via static analysis, i.e.
+# a plain `__version__ = "x.y.z"` with no imports needed to compute it
+version = { attr = "minchin.example.__version__" }
+readme = { file = ["README.rst"], content-type = "text/x-rst" }
+
+[tool.pytest.ini_options]
+addopts = ["--import-mode=importlib"]
+# tests ship inside the package: minchin/<name>/tests/
+testpaths = ["minchin"]
+
+[tool.ruff]
+line-length = 88
+# also skip excluded paths when a path is given explicitly
+force-exclude = true
+extend-exclude = ["_build"]
+
+[tool.ruff.format]
+# Reformat code snippets in docstrings.
+docstring-code-format = true
+# Keep each file's existing line endings, so Windows (CRLF working tree) and
+# the Linux CI runner don't fight each other.
+line-ending = "auto"
+
+[tool.ruff.lint]
+# Enable `from __future__ import annotations` imports
+future-annotations = true
+# Added to ruff's default (E4, E7, E9, F)
+extend-select = [
+  "A",   # shadowing builtin names
+  "B",   # bugbear
+  "E",
+  "W",   # pycodestyle
+  "I",   # isort
+  "N",   # PEP8 naming
+  "PTH", # use pathlib
+  "RUF", # ruff-specific
+  "SIM", # simplify
+  "UP",  # pyupgrade (limited by `requires-python`)
+  "YTT", # flake8-2020 (common issues with Python version checks)
+]
+
+[tool.ruff.lint.isort]
+# Sort imports within their section independent of the import type
+force-sort-within-sections = true
+known-first-party = ["minchin"]
+# Framework sections are standard boilerplate; an unused one costs nothing.
+# Delete a section's name from `section-order` only if its package clashes.
+section-order = [
+  "future",
+  "standard-library",
+  "django",
+  "pelican",
+  "third-party",
+  "first-party",
+  "local-folder",
+]
+
+[tool.ruff.lint.isort.sections]
+"django" = ["django"]
+"pelican" = ["pelican"]

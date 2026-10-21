@@ -5,7 +5,9 @@ start from `templates/`; existing projects are audited against this file.
 
 Rules are numbered (e.g. **T1**) so an audit can cite them. "Library" means a
 package published to PyPI; "app" means something deployed, not published
-(e.g. Django sites).
+(e.g. Django sites); "tooling" means a repo of scripts, plugins or
+configuration that is never built or published as a package (see section 8).
+Rules apply to libraries and apps unless a section says otherwise.
 
 ## 1. Tooling at a glance
 
@@ -161,7 +163,29 @@ Start from `templates/pyproject.toml`. Order: `build-system`, `project`,
 - **A4** Dependabot (`.github/dependabot.yaml`) for `uv` and `github-actions`
   ecosystems. (Assumed: see open items.)
 
-## 8. Open items
+## 8. Tooling repos
+
+A tooling repo holds scripts, Claude plugins, automation or similar. It is not
+installed as a package. It keeps the formatting, dependency, task and CI
+standards, and drops the packaging ones.
+
+- **K1** Declared with `[tool.python-style] kind = "tooling"` in
+  `pyproject.toml`. Without that marker a repo is audited as a library.
+- **K2** Start from `templates/pyproject-tooling.toml`: a minimal `[project]`
+  table (`name`, `version = "0"`, `requires-python`, `dependencies`), the
+  `[dependency-groups]`, `[tool.uv] package = false`, and the same ruff and
+  pytest config as a library (with `testpaths = ["tests"]`).
+- **K3** Not required: build backend, `license-files`, classifiers, project
+  URLs, `CHANGELOG.rst`, a `minchin/` package. Still required: F1-F9, D1-D5,
+  `README`, `LICENSE.txt`, `tasks.py`, `.editorconfig`, `.gitignore`,
+  `.gitattributes`, `.github/workflows/check.yml`. (`invoke.yaml` only
+  configures `minchin.releaser`, so tooling repos don't need it.)
+- **K4** Tests live in a top-level `tests/` (nothing ships), run by
+  `test.yml` when present.
+- **K5** `requires-python` is the minimum the scripts are run on, not a
+  published promise: use the oldest Python on any machine that runs them.
+
+## 9. Open items
 
 - Type checker (mypy or ty) not yet required.
 - The `fix` job pushes straight to the branch; protected branches would need a

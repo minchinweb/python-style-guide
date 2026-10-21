@@ -35,7 +35,8 @@ def lint(ctx):
 @task(name="format")
 def format_code(ctx):
     """Apply safe lint fixes, import sorting and formatting (code and TOML)."""
-    ctx.run("uv run ruff check --fix", pty=False)
+    # unfixable problems exit non-zero; still format, `lint` reports them
+    ctx.run("uv run ruff check --fix", pty=False, warn=True)
     ctx.run("uv run ruff format", pty=False)
     ctx.run("uv run taplo format pyproject.toml", pty=False)
 

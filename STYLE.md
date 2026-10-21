@@ -19,7 +19,7 @@ Rules apply to libraries and apps unless a section says otherwise.
 | Dependencies / venv / lock | `uv` (`uv.lock`)                                            | pip-tools, `.requirements/*.in/.txt` |
 | Build backend              | setuptools (>= 77)                                          | `setup.py`, `setup.cfg`              |
 | Tests                      | pytest (Django `TestCase` for Django apps)                  |                                      |
-| Task runner                | invoke (`tasks.py`), works on Windows with no extra install |                                      |
+| Task runner                | invoke (`tasks.py`), shared tasks from `minchin.tasks`      |                                      |
 | Release                    | `minchin.releaser` via invoke                               |                                      |
 | CI                         | GitHub Actions `check.yml` with `setup-uv`                  |                                      |
 | Pre-commit                 | not used                                                    |                                      |
@@ -67,7 +67,7 @@ Rules apply to libraries and apps unless a section says otherwise.
   - *indirect (transitive)* -> never written by hand; pinned by `uv.lock`
 - **D3** `uv.lock` is committed for libraries and apps.
 - **D4** Apps pin the interpreter in `.python-version`. Libraries do not.
-- **D5** `invoke update` and `invoke upgrade` mirror `apt`:
+- **D5** `invoke update` and `invoke upgrade` (from `minchin.tasks`) mirror `apt`:
   - `update`: `uv lock --upgrade`, re-resolve the lock to the newest allowed
     versions. Nothing installed yet.
   - `upgrade`: `uv sync`, install what the lock says into `.venv`.

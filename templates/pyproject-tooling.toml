@@ -10,6 +10,7 @@ dependencies = []
 [dependency-groups]
 dev = [
   "invoke >= 2.2",
+  "minchin.tasks >= 1.1",
   "pytest >= 8",
   "ruff >= 0.14",
   "taplo >= 0.9",               # formats pyproject.toml

@@ -26,8 +26,10 @@ Rules apply to libraries and apps unless a section says otherwise.
 
 ## 2. Formatting and linting (ruff)
 
-- **F1** One tool: ruff. No `[tool.black]`, `[tool.isort]` or `[tool.flake8]`
-  tables, and no black/isort/flake8 in dependencies.
+- **F1** One tool: ruff. No `[tool.black]` or `[tool.flake8]` tables, and no
+  black/isort/flake8 in dependencies. The one exception is a `[tool.isort]`
+  table mirroring the ruff isort settings (F4): `minchin.releaser` runs isort
+  before a release (and brings isort in itself), and needs it to agree with ruff.
 - **F2** Line length **88**.
 - **F3** `[tool.ruff.lint] extend-select` is `A B E W I N PTH RUF SIM UP YTT`
   (default rules `E4 E7 E9 F` stay on). `future-annotations = true`.

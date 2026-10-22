@@ -2,7 +2,17 @@
 
 from __future__ import annotations
 
-from minchin.tasks import check, format_code, lint, test, update, upgrade  # noqa: F401
+try:
+    from minchin.tasks import (  # noqa: F401
+        check,
+        format_code,
+        lint,
+        test,
+        update,
+        upgrade,
+    )
+except ImportError:
+    print("[WARN] minchin.tasks not installed.")
 
 try:
     from minchin.releaser import make_release  # noqa: F401

@@ -145,7 +145,11 @@ Start from `templates/pyproject.toml`. Order: `build-system`, `project`,
 ## 6. Code
 
 - **C1** Type hints on new and touched code; `from __future__ import
-  annotations` at the top of each module (after the module docstring).
+  annotations` at the top of each module (after the module docstring). Ruff
+  enforces this (`required-imports`, rule `I002`; `--fix` adds it, empty files
+  are skipped). Excluded generated code (F6, e.g. migrations) is exempt, as
+  are settings files with nothing to annotate (Sphinx `docs/conf.py`, Pelican
+  `pelicanconf.py` and `publishconf.py`), via per-file ignores (F7).
 - **C2** Google-style docstrings (`Args:`, `Returns:`, `Raises:`), with the
   summary on the first line after the opening quotes or on its own line, kept
   consistent within a module.
@@ -154,8 +158,11 @@ Start from `templates/pyproject.toml`. Order: `build-system`, `project`,
   `match`, `X | None`, `dataclass`, `tomllib`.
 - **C5** `logging`, not `print`, for anything that isn't CLI output.
 - **C6** Tests are pytest functions with plain `assert`.
-- **C7** A copyright/licence header is project-specific; company projects use
-  ruff's `CPY` rule. Personal packages do not require one.
+- **C7** Every module starts with a copyright notice, e.g. `# Copyright (c)
+  2026 Name`, personal projects included. Ruff's `CPY001` enforces it (a
+  preview-only rule, so the template sets `preview = true` with
+  `explicit-preview-rules = true`). The notice goes above the module docstring
+  and the `__future__` import. Excluded generated code (F6) is exempt.
 
 ## 7. CI and automation
 

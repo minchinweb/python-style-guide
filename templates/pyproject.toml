@@ -102,7 +102,8 @@ testpaths = ["minchin"]
 line-length = 88
 # also skip excluded paths when a path is given explicitly
 force-exclude = true
-extend-exclude = ["_build"]
+# Generated code
+extend-exclude = ["_build", "**/migrations/*.py"]
 
 [tool.ruff.format]
 # Reformat code snippets in docstrings.
@@ -114,10 +115,15 @@ line-ending = "auto"
 [tool.ruff.lint]
 # Enable `from __future__ import annotations` imports
 future-annotations = true
+# `CPY001` is preview-only. `explicit-preview-rules` limits preview to rules
+# selected by their full code, so no other rule changes behaviour.
+preview = true
+explicit-preview-rules = true
 # Added to ruff's default (E4, E7, E9, F)
 extend-select = [
   "A",   # shadowing builtin names
   "B",   # bugbear
+  "CPY001", # copyright notice at the top of each file
   "E",
   "W",   # pycodestyle
   "I",   # isort
@@ -129,10 +135,21 @@ extend-select = [
   "YTT", # flake8-2020 (common issues with Python version checks)
 ]
 
+[tool.ruff.lint.flake8-copyright]
+# `notice-rgx` is ruff's default, written out. A notice looks like
+# `Copyright (c) 2026 Name`; add `author` to require a particular name.
+notice-rgx = "(?i)Copyright\\s+((?:\\(C\\)|©)\\s+)?\\d{4}((-|,\\s)\\d{4})*"
+# author = "Your Name"
+# Bytes. Skips empty and import-only `__init__.py` files.
+min-file-size = 1024
+
 [tool.ruff.lint.isort]
 # Sort imports within their section independent of the import type
 force-sort-within-sections = true
 known-first-party = ["minchin"]
+# Rule I002; `--fix` adds it. Empty files are skipped. Migrations are kept out
+# via `extend-exclude` above; settings files are exempt below.
+required-imports = ["from __future__ import annotations"]
 # Framework sections are standard boilerplate; an unused one costs nothing.
 # Delete a section's name from `section-order` only if its package clashes.
 section-order = [
@@ -149,6 +166,13 @@ section-order = [
 "django" = ["django"]
 "pelican" = ["pelican"]
 
+[tool.ruff.lint.per-file-ignores]
+# Settings files hold plain values, with nothing to annotate. Harmless if the
+# file doesn't exist in a project.
+"docs/conf.py" = ["I002"]    # Sphinx
+"pelicanconf.py" = ["I002"]  # Pelican
+"publishconf.py" = ["I002"]  # Pelican (`from pelicanconf import *`)
+
 [tool.isort]
 # Only here because `minchin.releaser` runs isort before a release. It mirrors
 # `[tool.ruff.lint.isort]` above (keep the two in step); ruff does the
@@ -157,6 +181,15 @@ profile = "black"
 line_length = 88
 force_sort_within_sections = true
 known_first_party = ["minchin"]
+add_imports = ["from __future__ import annotations"]
+# isort has no per-file ignores, so skip the files ruff excludes or exempts
+# above (ruff still sorts the settings files).
+extend_skip_glob = [
+  "*/migrations/*",
+  "docs/conf.py",
+  "pelicanconf.py",
+  "publishconf.py",
+]
 known_django = ["django"]
 known_pelican = ["pelican"]
 sections = [

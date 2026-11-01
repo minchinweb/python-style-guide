@@ -6,8 +6,10 @@ start from `templates/`; existing projects are audited against this file.
 Rules are numbered (e.g. **T1**) so an audit can cite them. "Library" means a
 package published to PyPI; "app" means something deployed, not published
 (e.g. Django sites); "tooling" means a repo of scripts, plugins or
-configuration that is never built or published as a package (see section 8).
-Rules apply to libraries and apps unless a section says otherwise.
+configuration that is never built or published as a package (see section 8);
+"Home Assistant integration" means a custom integration installed through
+HACS (see section 9). Rules apply to libraries and apps unless a section says
+otherwise.
 
 ## 1. Tooling at a glance
 
@@ -203,7 +205,67 @@ standards, and drops the packaging ones.
 - **K5** `requires-python` is the minimum the scripts are run on, not a
   published promise: use the oldest Python on any machine that runs them.
 
-## 9. Open items
+## 9. Home Assistant integrations
+
+A custom integration (a "custom component") is copied into Home Assistant's
+`config/custom_components/` by HACS. Like a tooling repo it is never built or
+published as a package, so it keeps the formatting, dependency, task and CI
+standards and drops the packaging ones; Home Assistant and HACS add their own
+requirements on top.
+
+- **H1** Declared with `[tool.python-style] kind = "homeassistant"` in
+  `pyproject.toml`. Start from `templates/pyproject-homeassistant.toml`: a
+  minimal `[project]` table, `[tool.uv] package = false`, the same ruff config
+  as a library, and Home Assistant's pytest settings. K3's list of what is
+  and isn't required applies, with the changes below.
+- **H2** Layout: the integration lives in `custom_components/<domain>/` (HACS
+  requires this path), with `manifest.json`, `__init__.py`, `config_flow.py`,
+  `constants.py`, `strings.json`, `translations/en.json` and `icons.json`.
+  `hacs.json` is at the repo root. `known-first-party = ["custom_components"]`
+  replaces `minchin` (F4).
+- **H3** The version lives only in `manifest.json` (`"version"`), which HACS
+  and Home Assistant read. `pyproject.toml` has `version = "0"`, and there is
+  no `__version__`. `minchin.releaser` only bumps a Python version string, so
+  there is no `invoke.yaml`; to release, update `manifest.json` and the
+  changelog's `:release:` line, tag `vX.Y.Z` (L6), and publish a **GitHub
+  release** from the tag (HACS offers releases to users, not bare tags).
+- **H4** `requires-python` is the minimum Python of the Home Assistant release
+  the tests run against (`pytest-homeassistant-custom-component` pins one
+  exact `homeassistant`), and CI tests that one Python (A2). Separately,
+  `hacs.json` `"homeassistant"` is the oldest Home Assistant release the code
+  supports; raise it when the code starts using a newer API.
+- **H5** Dependencies (D1, D2): Home Assistant provides most of what an
+  integration needs, so `[project.dependencies]` is usually empty. A real
+  runtime requirement goes in both `manifest.json` `requirements` (where Home
+  Assistant installs it from) and `[project.dependencies]` (so tests and the
+  lock see it). The `dev` group adds `pytest-homeassistant-custom-component`
+  in place of a direct `homeassistant` requirement, since it pins the matching
+  release.
+- **H6** Tests live in a top-level `tests/` (K4), with a `conftest.py` that
+  turns on the `enable_custom_integrations` fixture for every test (see
+  `templates/homeassistant/conftest.py`). Test through config entries and the
+  config flow (`MockConfigEntry`, `hass.config_entries.flow`), not by
+  constructing entities by hand, so the test fails when Home Assistant
+  couldn't load the integration. The pytest plugin needs Linux (`fcntl`): on
+  Windows, run the tests under WSL with `UV_PROJECT_ENVIRONMENT` pointing at a
+  Linux-side venv, so it doesn't clash with the Windows `.venv`.
+- **H7** Keep the maths and parsing in modules that don't import Home
+  Assistant, so they're easy to test and reason about; the platform modules
+  only adapt them to entities.
+- **H8** Follow Home Assistant's current integration conventions: setup
+  through a config flow only (no YAML), state in `entry.runtime_data`,
+  `_attr_has_entity_name = True` with a `translation_key`, entity names and
+  form text in `strings.json`. Custom integrations only read
+  `translations/`, which can't use `[%key:...%]` references, so
+  `translations/en.json` is `strings.json` with them resolved, checked by a
+  test.
+- **H9** CI: `check.yml` and `test.yml` (A1, A2), plus `validate.yml`, which
+  runs the HACS action (`hacs/action`, category `integration`) and
+  `hassfest`. See `templates/homeassistant/validate.yml`.
+- **H10** Root files: as K3, with `README.md` (HACS renders it as the
+  integration's page) rather than `README.rst`.
+
+## 10. Open items
 
 - Type checker (mypy or ty) not yet required.
 - The `fix` job pushes straight to the branch; protected branches would need a

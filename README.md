@@ -8,8 +8,8 @@ Reference for setting up and maintaining my Python projects.
   `pyproject.toml`, `tasks.py`, `invoke.yaml`, `.editorconfig`,
   `.github/workflows/{check,test}.yml`. `pyproject-tooling.toml` is for a
   tooling repo; `pyproject-homeassistant.toml` and `homeassistant/`
-  (`conftest.py`, `hacs.json`, `validate.yml`) are for a Home Assistant
-  custom integration (STYLE.md section 9).
+  (`conftest.py`, `hacs.json`, `validate.yml`, `README-install.md`) are for
+  a Home Assistant custom integration (STYLE.md section 9).
 
 `DEVIATIONS.md` (how my local projects differ from the guide) is generated on
 each machine by `/python-style:survey` and is git-ignored, since it names

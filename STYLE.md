@@ -36,6 +36,7 @@ otherwise.
 - **F3** `[tool.ruff.lint] extend-select` is `A B E W I N PTH RUF SIM UP YTT`
   (default rules `E4 E7 E9 F` stay on). `future-annotations = true`.
   Add rule families deliberately, with a comment saying what they are.
+  `SIM108` (use a ternary) is ignored: a short `if`/`else` block is preferred.
 - **F4** Import sorting keeps the historic style: `force-sort-within-sections
   = true` (so `import x` and `from x import y` sort together by module name),
   `known-first-party = ["minchin", ...]`. The Django and Pelican sections are

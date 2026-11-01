@@ -264,6 +264,10 @@ requirements on top.
   `hassfest`. See `templates/homeassistant/validate.yml`.
 - **H10** Root files: as K3, with `README.md` (HACS renders it as the
   integration's page) rather than `README.rst`.
+- **H11** `README.md` has an "Install to my Home Assistant" link near the top,
+  using the HACS badge that opens the repository in the user's Home Assistant
+  (see `templates/homeassistant/README-install.md`). It points at the repo's
+  `owner` and `repository` and sets `category=integration`.
 
 ## 10. Open items
 

@@ -264,10 +264,22 @@ requirements on top.
   `hassfest`. See `templates/homeassistant/validate.yml`.
 - **H10** Root files: as K3, with `README.md` (HACS renders it as the
   integration's page) rather than `README.rst`.
-- **H11** `README.md` has an "Install to my Home Assistant" link near the top,
-  using the HACS badge that opens the repository in the user's Home Assistant
-  (see `templates/homeassistant/README-install.md`). It points at the repo's
-  `owner` and `repository` and sets `category=integration`.
+- **H11** `README.md` has an "Install to my Home Assistant" button near the
+  top: a My Home Assistant link that opens the repository in HACS on the
+  reader's own Home Assistant, ready to download. Use the `hacs_repository`
+  redirect, which opens HACS before Home Assistant 2026.11 and the Marketplace
+  after (the newer `marketplace_repository` only works from 2026.11). Always
+  set `category=integration`: for a repository not in the catalog, that is
+  what lets the link offer to add it as a custom repository. Follow it with
+  a `config_flow_start` button for setting the integration up after the
+  restart. Start from `templates/homeassistant/README-install.md`; for
+  `owner=minchinweb`, `repository=ha-example`, domain `example`:
+
+  ```markdown
+  [![Open your Home Assistant instance and open this repository in HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=minchinweb&repository=ha-example&category=integration)
+
+  [![Open your Home Assistant instance and start setting up this integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=example)
+  ```
 
 ## 10. Open items
 

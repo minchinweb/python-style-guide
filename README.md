@@ -15,6 +15,13 @@ Reference for setting up and maintaining my Python projects.
 each machine by `/python-style:survey` and is git-ignored, since it names
 private projects.
 
+## Versions
+
+Releases are date-based, `YEAR.MONTH.PATCH` (for example `2026.11.0`): the year
+and month of the release, then a counter for further releases in that month,
+starting at 0. The number marks when the guide was current; it makes no promise
+about compatibility. See the [releases](https://github.com/minchinweb/python-style-guide/releases).
+
 ## Using it
 
 The [`python-style`](https://github.com/minchinweb/claude-skills) Claude Code
